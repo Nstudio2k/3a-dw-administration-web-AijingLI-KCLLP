@@ -1,5 +1,6 @@
 services:
   web:
+    container_name: web-server-admin-web
     image: nginx:alpine
     restart: unless-stopped
     ports:
@@ -7,11 +8,13 @@ services:
 
   app:
     container_name: web-server-admin-app
-    image: php:8.4-apache
+    build: .
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
+    expose:
+      - "9000"
     volumes:
       - ./app:/var/www/html
 
@@ -20,6 +23,7 @@ services:
     container_name: web-server-admin-db
     restart: unless-stopped
     environment:
+      - POSTGRES_HOST=db
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
