@@ -5,10 +5,18 @@ services:
     restart: unless-stopped
     ports:
       - 80:80
+    depends_on:
+      - app
+    volumes:
+      - ./web-admin/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./web-admin/site1:/usr/share/nginx/html/site1:ro
+      - ./web-admin/site3:/var/www/html:ro
 
   app:
     container_name: web-server-admin-app
     build: .
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
     restart: unless-stopped
     depends_on:
       db:
@@ -16,7 +24,7 @@ services:
     expose:
       - "9000"
     volumes:
-      - ./app:/var/www/html
+      - ./web-admin/site3:/var/www/html
 
   db:
     image: postgres:16-alpine
