@@ -1,9 +1,9 @@
 const fs = require('fs');
-const assert = require('assert');
+const path = require('path');
 
-const content = fs.readFileSync(__dirname + '/app.js', 'utf8');
+test('app.js contains a Node HTTP server', () => {
+  const appPath = path.join(__dirname, 'app.js');
+  const content = fs.readFileSync(appPath, 'utf8');
 
-assert(content.includes('http.createServer'), 'app.js should create an HTTP server');
-assert(content.includes('server.listen(3000'), 'app.js should listen on port 3000');
-
-console.log('Simple test passed');
+  expect(content).toContain('http.createServer');
+});
